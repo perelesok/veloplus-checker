@@ -2,7 +2,7 @@ name: VeloPlus Check
 
 on:
   schedule:
-    - cron: '/30 8-21 * * *' 
+    - cron: '*/30 8-21 * * *' 
   workflow_dispatch:  # ручной запуск
 
 jobs:
