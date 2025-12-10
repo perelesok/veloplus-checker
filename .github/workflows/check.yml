@@ -62,14 +62,12 @@ jobs:
             fi
           }
 
-          r1=$(check_url "153" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22153%22%3A1%7D')
+          # r1=$(check_url "153" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22153%22%3A1%7D')
           r2=$(check_url "201" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22201%22%3A1%7D')
           r3=$(check_url "202" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22202%22%3A1%7D')
           r4=$(check_url "210" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22210%22%3A1%7D')
 
           message="🚲 VeloPlus статус:
-
-${r1}
 
 ${r2}
 
