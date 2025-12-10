@@ -50,10 +50,12 @@ jobs:
                     .[] | "  • \(.site.name): \(.availability) - \(.firstAvailableSlot)"
                 end')
             
+            unavailable_count=$(echo "$response" | jq '[.[] | select(.availability == "UNAVAILABLE")] | length')
+            
             if [ -n "$available" ]; then
                 printf "✅ <b>[%s]</b>\n%s" "$label" "$available"
             else
-                printf "❌ <b>[%s]</b> — нет доступных" "$label"
+                printf "❌ <b>[%s]</b> — нет доступных (%s точек UNAVAILABLE)" "$label" "$unavailable_count"
             fi
           }
 
