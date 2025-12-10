@@ -2,8 +2,8 @@ name: VeloPlus Check
 
 on:
   schedule:
-    - cron: '*/30 8-21 * * *' 
-  workflow_dispatch:  # ручной запуск
+    - cron: '*/30 8-21 * * *'
+  workflow_dispatch:
 
 jobs:
   check:
@@ -18,10 +18,8 @@ jobs:
             local label="$1"
             local url="$2"
             
-            # Fetch with error handling
             http_code=$(curl -s -o /tmp/response.json -w "%{http_code}" "$url")
             
-            # Check HTTP status
             if [ "$http_code" != "200" ]; then
                 printf "⚠️ <b>[%s]</b> — ошибка HTTP %s" "$label" "$http_code"
                 return
@@ -29,20 +27,17 @@ jobs:
             
             response=$(cat /tmp/response.json)
             
-            # Check if response is valid JSON array
             if ! echo "$response" | jq -e 'type == "array"' > /dev/null 2>&1; then
                 printf "⚠️ <b>[%s]</b> — неверный формат ответа" "$label"
                 return
             fi
             
-            # Check if array is empty
             array_length=$(echo "$response" | jq 'length')
             if [ "$array_length" == "0" ]; then
                 printf "⚠️ <b>[%s]</b> — пустой ответ от API" "$label"
                 return
             fi
             
-            # Check if objects have expected fields
             if ! echo "$response" | jq -e '.[0] | has("availability") and has("site")' > /dev/null 2>&1; then
                 printf "⚠️ <b>[%s]</b> — изменился формат API" "$label"
                 return
@@ -62,18 +57,17 @@ jobs:
             fi
           }
 
-          # r1=$(check_url "153" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22153%22%3A1%7D')
           r2=$(check_url "201" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22201%22%3A1%7D')
           r3=$(check_url "202" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22202%22%3A1%7D')
           r4=$(check_url "210" 'https://boutique.veloplus-m.fr/pu/sites/stock?offer_quantities=%7B%22210%22%3A1%7D')
 
           message="🚲 VeloPlus статус:
 
-${r2}
+          ${r2}
 
-${r3}
+          ${r3}
 
-${r4}"
+          ${r4}"
 
           curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             -d chat_id="${TELEGRAM_CHAT_ID}" \
